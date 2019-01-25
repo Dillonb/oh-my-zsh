@@ -38,7 +38,14 @@ function aws_account {
     fi
 }
 
-PROMPT='$(clock)$(username)@$(host):$(dir) $(aws_account) $(git_prompt_info)
+function java_version {
+    java_executable=$(which java)
+    if [ -x "$java_executable" ]; then
+        echo "☕️ $(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')"
+    fi
+}
+
+PROMPT='$(clock)$(username)@$(host):$(dir) $(aws_account) $(java_version) $(git_prompt_info)
 %_$(prompt_char) '
 
 RPROMPT='$(exit_code)'
