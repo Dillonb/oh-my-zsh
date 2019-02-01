@@ -33,23 +33,28 @@ function dir {
 }
 
 function aws_account {
-    if [ -n ${CURRENT_AWS_ACCOUNT+x} ]; then
+    if [ -n "${CURRENT_AWS_ACCOUNT}" ]; then
         EXPIRES_TS=$(date --date="$AWS_SESSION_EXPIRES" +"%s")
         NOW_TS=$(date +"%s")
 
         SECS_REMAINING=$(( $EXPIRES_TS - $NOW_TS))
 
+        if [ $SECS_REMAINING -gt 0 ]; then
+            DAYS_REMAINING=$(( $SECS_REMAINING / 86400 ))
+            SECS_REMAINING=$(( $SECS_REMAINING % 86400 ))
 
-        DAYS_REMAINING=$(( $SECS_REMAINING / 86400 ))
-        SECS_REMAINING=$(( $SECS_REMAINING % 86400 ))
+            HOURS_REMAINING=$(( $SECS_REMAINING / 3600 ))
+            SECS_REMAINING=$(( $SECS_REMAINING % 3600 ))
 
-        HOURS_REMAINING=$(( $SECS_REMAINING / 3600 ))
-        SECS_REMAINING=$(( $SECS_REMAINING % 3600 ))
+            MINUTES_REMAINING=$(( $SECS_REMAINING / 60 ))
+            SECS_REMAINING=$(( $SECS_REMAINING % 60 ))
 
-        MINUTES_REMAINING=$(( $SECS_REMAINING / 60 ))
-        SECS_REMAINING=$(( $SECS_REMAINING % 60 ))
+            echo "$CURRENT_AWS_ACCOUNT ${DAYS_REMAINING}d${HOURS_REMAINING}h${MINUTES_REMAINING}m${SECS_REMAINING}s"
+        else
+            echo $CURRENT_AWS_ACCOUNT EXPIRED!
+        fi
 
-        echo $CURRENT_AWS_ACCOUNT ${DAYS_REMAINING}d${HOURS_REMAINING}h${MINUTES_REMAINING}m${SECS_REMAINING}s
+
     fi
 }
 
