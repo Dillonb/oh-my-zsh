@@ -4,7 +4,7 @@ ZSH_THEME_GIT_PROMPT_DIRTY=" %{$fg[red]%}⚡"
 ZSH_THEME_GIT_PROMPT_CLEAN=""
 
 function prompt_char {
-	if [ $UID -eq 0 ]; then echo "%{$fg[red]%}#%{$reset_color%}"; else echo $; fi
+    if [ $UID -eq 0 ]; then echo "%{$fg[red]%}#%{$reset_color%}"; else echo $; fi
 }
 
 function exit_code {
@@ -34,7 +34,22 @@ function dir {
 
 function aws_account {
     if [ -n ${CURRENT_AWS_ACCOUNT+x} ]; then
-        echo $CURRENT_AWS_ACCOUNT
+        EXPIRES_TS=$(date --date="$AWS_SESSION_EXPIRES" +"%s")
+        NOW_TS=$(date +"%s")
+
+        SECS_REMAINING=$(( $EXPIRES_TS - $NOW_TS))
+
+
+        DAYS_REMAINING=$(( $SECS_REMAINING / 86400 ))
+        SECS_REMAINING=$(( $SECS_REMAINING % 86400 ))
+
+        HOURS_REMAINING=$(( $SECS_REMAINING / 3600 ))
+        SECS_REMAINING=$(( $SECS_REMAINING % 3600 ))
+
+        MINUTES_REMAINING=$(( $SECS_REMAINING / 60 ))
+        SECS_REMAINING=$(( $SECS_REMAINING % 60 ))
+
+        echo $CURRENT_AWS_ACCOUNT ${DAYS_REMAINING}d${HOURS_REMAINING}h${MINUTES_REMAINING}m${SECS_REMAINING}s
     fi
 }
 
