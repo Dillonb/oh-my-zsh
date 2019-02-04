@@ -40,16 +40,12 @@ function aws_account {
         SECS_REMAINING=$(( $EXPIRES_TS - $NOW_TS))
 
         if [ $SECS_REMAINING -gt 0 ]; then
-            DAYS_REMAINING=$(( $SECS_REMAINING / 86400 ))
-            SECS_REMAINING=$(( $SECS_REMAINING % 86400 ))
-
             HOURS_REMAINING=$(( $SECS_REMAINING / 3600 ))
             SECS_REMAINING=$(( $SECS_REMAINING % 3600 ))
 
             MINUTES_REMAINING=$(( $SECS_REMAINING / 60 ))
-            SECS_REMAINING=$(( $SECS_REMAINING % 60 ))
 
-            echo "$CURRENT_AWS_ACCOUNT ${DAYS_REMAINING}d${HOURS_REMAINING}h${MINUTES_REMAINING}m${SECS_REMAINING}s"
+            echo "$CURRENT_AWS_ACCOUNT ${HOURS_REMAINING}h${MINUTES_REMAINING}m"
         else
             echo $CURRENT_AWS_ACCOUNT EXPIRED!
         fi
