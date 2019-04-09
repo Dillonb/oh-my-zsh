@@ -55,9 +55,11 @@ function aws_account {
 }
 
 function java_version {
-    java_executable=$(which java)
-    if [ -x "$java_executable" ]; then
-        echo "☕️ $(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')"
+    if [[ $DGB_THEME_SHOW_JAVA_VERSION == "true" ]]; then
+        java_executable=$(which java)
+        if [ -x "$java_executable" ]; then
+            echo "☕️ $(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')"
+        fi
     fi
 }
 
