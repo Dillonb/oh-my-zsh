@@ -32,38 +32,13 @@ function dir {
     echo "%{$fg_bold[blue]%}%~%{$reset_color%}"
 }
 
-function aws_account {
-    if [ -n "${CURRENT_AWS_ACCOUNT}" ]; then
-        EXPIRES_TS=$(date --date="$AWS_SESSION_EXPIRES" +"%s")
-        NOW_TS=$(date +"%s")
-
-        SECS_REMAINING=$(( $EXPIRES_TS - $NOW_TS))
-
-        if [ $SECS_REMAINING -gt 0 ]; then
-            HOURS_REMAINING=$(( $SECS_REMAINING / 3600 ))
-            SECS_REMAINING=$(( $SECS_REMAINING % 3600 ))
-
-            MINUTES_REMAINING=$(( $SECS_REMAINING / 60 ))
-
-            echo "$CURRENT_AWS_ACCOUNT ${HOURS_REMAINING}h${MINUTES_REMAINING}m"
-        else
-            echo $CURRENT_AWS_ACCOUNT EXPIRED!
-        fi
-
-
+function conditional_git_prompt {
+    if [ -z "$ZSH_THEME_DISABLE_GIT_PRMOPT" ]; then
+        echo "$(git_prompt_info)"
     fi
 }
 
-function java_version {
-    if [[ $DGB_THEME_SHOW_JAVA_VERSION == "true" ]]; then
-        java_executable=$(which java)
-        if [ -x "$java_executable" ]; then
-            echo "☕️ $(java -version 2>&1 | head -n 1 | awk -F '"' '{print $2}')"
-        fi
-    fi
-}
-
-PROMPT='$(clock)$(username)@$(host):$(dir) $(aws_account) $(java_version) $(git_prompt_info)
+PROMPT='$(clock)$(username)@$(host):$(dir) $(conditional_git_prompt)
 %_$(prompt_char) '
 
 RPROMPT='$(exit_code)'
